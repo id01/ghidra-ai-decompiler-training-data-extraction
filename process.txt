@@ -1,0 +1,34 @@
+Struct guessing:
+
+First, use compile_wild_c_batch.py to compile wild c with a certain compiler.
+Then, use compile_wild_c_batch.py with unpack_c.py as compiler to get the original files.
+Now that we know which files compile, use create_parquet.py to create a parquet of the compiled files.
+Then, we can use remove_low_quality_code_from_parquets.py to clean up the parquet data (removing functions that are too short, too long, or gibberish).
+Then, we can convert each one of the original_funcs into a cleaner version using an AI tool.
+Then, we can re-compile each one of the funcs individually and see which ones stick.
+Finally, we can decompile each one of the funcs individually with gdwarf4, then load it in Ghidra with one version with dwarf and one version without.
+	We use extract_structs.py to get the structs/variable declarations in a readable format.
+	We can then train on this, and parse the output to put into Ghidra programatically.
+
+Undoing compiler optimizations:
+
+Convert from dwarf decompilation -> original
+
+
+
+ACTUALLY, we can probably just clean up the code later (from original)
+So, we just need to train two models
+
+Struct guessing:
+First, use compile_wild_c_batch.py to compile wild c with a certain compiler (add gdb dwarf4 symbols for use in Ghidra)
+Then, use compile_wild_c_batch.py with unpack_c.py as compiler to get the original files.
+Now that we know which files compile, use create_parquet.py to create a parquet of the compiled files.
+Then, we can use remove_low_quality_code_from_parquets.py to clean up the parquet data (removing functions that are too short, too long, or gibberish).
+Now that we know which files/functions have good code, we can decompile these files specifically and extract structs used by each function and the original decompiled forms of these functions.
+
+
+
+This we need:
+Raw decompilation -> extract_structs.py result (which can be used to convert raw decompilation -> dwarf decompilation)
+Dwarf decompilation -> original, no need to guess structs (do we even need to train our own model for this?)
+Original -> cleaned (change variable names/add comments to the code, this is something LLMs can already do pretty easily)
